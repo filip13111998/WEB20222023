@@ -1,0 +1,3 @@
+8a56f8cf-8bd2-486f-aa16-7b79e59704d7|kola.jpg|NEKI TEKST ZA SLIKICU KOLA!|zile|true
+dfb3bf7a-b02f-4376-8ef7-f04dd9b84a94|mac.jpg|MAC FAST FOOD|aa|true
+714b9742-03df-4249-ac5e-e7c57cf7517f|porsche.jpg|PORSCHE TURBO|zile|true
