@@ -130,15 +130,16 @@ public class UserService {
 		return result;
 	}
 
-	public UserBasicProfileRepsonseDTO getUserBasicProfileData(String uuid) {
+	public UserBasicProfileRepsonseDTO getUserBasicProfileData(String username) {
 		
-		Optional<User> userOptional = ur.findUserById(uuid);
+		Optional<User> userOptional = ur.findUserByUsername(username);
 		
 		if(userOptional.isPresent()) {
+		
 			
 			User user = userOptional.get();
 			
-			UserBasicProfileRepsonseDTO ubprdto = new UserBasicProfileRepsonseDTO(user.getFirstName(), user.getLastName(), user.getDateOfBrith(), uuid);
+			UserBasicProfileRepsonseDTO ubprdto = new UserBasicProfileRepsonseDTO(user.getFirstName(), user.getLastName(), user.getDateOfBrith(), user.getProfilImage() , username);
 					
 			return ubprdto;
 		}

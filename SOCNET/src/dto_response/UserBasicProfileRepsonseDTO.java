@@ -10,19 +10,21 @@ public class UserBasicProfileRepsonseDTO {
 	
 	private String profilImage;
 
-	
+	private String username;
 	
 	
 	public UserBasicProfileRepsonseDTO() {
 
 	}
 
-	public UserBasicProfileRepsonseDTO(String firstName, String lastName, Long dateOfBrith, String profilImage) {
+	public UserBasicProfileRepsonseDTO(String firstName, String lastName, Long dateOfBrith, String profilImage,
+			String username) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBrith = dateOfBrith;
 		this.profilImage = profilImage;
+		this.username = username;
 	}
 
 	public String getFirstName() {
@@ -55,6 +57,14 @@ public class UserBasicProfileRepsonseDTO {
 
 	public void setProfilImage(String profilImage) {
 		this.profilImage = profilImage;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	

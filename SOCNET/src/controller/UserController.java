@@ -1,8 +1,11 @@
 package controller;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -11,16 +14,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import dto_request.SearchUsersDTO;
 import dto_request.UpdateProfileDTO;
 import dto_response.SearchedUserDTO;
+import dto_response.UserBasicProfileRepsonseDTO;
 import dto_response.UserProfileDTO;
 import extractor.Extractor;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import service.UserService;
+import util.ImageUtil;
 
 @Path("/user")
 public class UserController {
@@ -59,6 +65,30 @@ public class UserController {
 		
 		return us.getProfilData(username);
 		
+	}
+	
+	@GET
+	@Path("/get/{profileUsername}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getProfileData(@Context HttpServletRequest request ,@Context HttpServletResponse response , @PathParam("profileUsername") String profileUsername) throws IOException {
+		
+		UserBasicProfileRepsonseDTO profile  = us.getUserBasicProfileData(profileUsername);
+	    
+		// Encode image data as Base64
+	    if(profile.getProfilImage().length()>0) {
+	    	
+	    	String encodedImage = Base64.getEncoder().encodeToString(ImageUtil.loadImage(profile.getProfilImage()));
+	    	
+	    	profile.setProfilImage(encodedImage);
+
+	    }
+	    else {
+
+	    	profile.setProfilImage("");
+	    	
+	    }
+
+		return Response.ok(profile).build();
 	}
 	
 //	@GET

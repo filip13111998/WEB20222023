@@ -1,6 +1,7 @@
 package service;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import dto_request.UserDTO;
 import model.User;
@@ -10,19 +11,20 @@ public class AuthenticationService {
 
 	private UserRepository ur = new UserRepository();
 
-	public boolean isExist(String username, String password) {
-	
-		User us = ur.getAllUsers().stream()
-										.filter(u -> username.equals(u.getUsername()) && password.equals(u.getPassword()))
-										.findFirst()
-										.orElse(null);
-
-		if (us != null) {
+	public boolean isExist(String username) {
+		
+		Optional<User> userOptional = ur.getAllUsers().stream()
+										.filter(u -> u.getUsername().equals(username))
+										.findFirst();
+			
+		if (userOptional.isPresent()) {
+			
 			return true;
+		
 		}
 		
-		
 		return false;
+		
 	}
 
 	public void register(User u) {
@@ -34,7 +36,6 @@ public class AuthenticationService {
 	public HashMap<String, String> login(UserDTO us) {
 		
 		HashMap<String, String> maps = new HashMap<String,String>();
-		
 		
 		User usr = ur.getAllUsers().stream()
 				.filter(u -> us.getUsername().equals(u.getUsername()) && us.getPassword().equals(u.getPassword()) && u.getActive().equals(true))
@@ -49,17 +50,9 @@ public class AuthenticationService {
 			return maps;
 		}
 		
-		
-		
 		maps.put("role",usr.getRole());
+		
 		maps.put("username", usr.getUsername());
-		
-//		if (usr == null) {
-//			System.out.println("USO");
-//			return false;
-//		}
-		
-		
 		
 		return maps;
 		

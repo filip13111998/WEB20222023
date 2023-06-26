@@ -59,14 +59,14 @@ public class DBI implements ServletContextListener{
 		String commentUuid22 = UUID.randomUUID().toString();
 		
 		comment += commentUuid21 + "|" + "TOP HAMBURGER" + "|" + new Date().getTime() + "|" + new Date().getTime() + "|" + postUuid2 + "|" + "cc" + "|" + "true" + "\n";
-		comment += commentUuid22 + "|" + "pomfrittt" + "|" + new Date().getTime() + "|" + new Date().getTime()+ "|" + postUuid2 +"|" + "apaci" +  "|" + "true"+ "\n";
+		comment += commentUuid22 + "|" + "pomfrittt" + "|" + new Date().getTime() + "|" + new Date().getTime()+ "|" + postUuid2 +"|" + "apaci" +  "|" + "true";
 		
 		
 		post += postUuid2 + "|" + "mac.jpg" + "|" + "MAC FAST FOOD" + "|" + "aa" + "|" + "true" + "\n";
 		
 		String postUuid3 = UUID.randomUUID().toString();
 		
-		post += postUuid3 + "|" + "porsche.jpg" + "|" + "PORSCHE TURBO" + "|" + "zile" + "|" + "true" + "\n";
+		post += postUuid3 + "|" + "porsche.jpg" + "|" + "PORSCHE TURBO" + "|" + "zile" + "|" + "true" ;
 		
 		try {
 			

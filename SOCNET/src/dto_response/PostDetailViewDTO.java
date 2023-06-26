@@ -1,52 +1,33 @@
-package model;
+package dto_response;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Post {
+import model.Comment;
 
+public class PostDetailViewDTO {
+	
 	private String uuid; //ID POST
 	
 	private String image; // URL
 	
 	private String text;
-	
-	private List<Comment> comments = new ArrayList<Comment>();
 
 	private String username;
 	
+	private List<Comment> comments = new ArrayList<Comment>();
+
 	
-
-
-	public Post(String uuid, String image, String text, String username) {
-		this.uuid = uuid;
-		this.image = image;
-		this.text = text;
-		this.username = username;
+	public PostDetailViewDTO() {
 	}
 
-	public Post() {
-	}
-
-
-
-	public Post(String uuid, String image, String text, List<Comment> comments, String username) {
+	public PostDetailViewDTO(String uuid, String image, String text, String username, List<Comment> comments) {
 		super();
 		this.uuid = uuid;
 		this.image = image;
 		this.text = text;
+		this.username = username;
 		this.comments = comments;
-		this.username = username;
-	}
-	
-	
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getUuid() {
@@ -73,6 +54,14 @@ public class Post {
 		this.text = text;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	public List<Comment> getComments() {
 		return comments;
 	}
@@ -83,8 +72,10 @@ public class Post {
 
 	@Override
 	public String toString() {
-		return "Post [uuid=" + uuid + ", image=" + image + ", text=" + text + ", comments=" + comments + ", username="
-				+ username + "]";
+		return "PostDetailViewDTO [uuid=" + uuid + ", image=" + image + ", text=" + text + ", username=" + username
+				+ ", comments=" + comments + "]";
 	}
+	
+	
 	
 }

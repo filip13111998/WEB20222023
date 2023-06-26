@@ -1,37 +1,24 @@
 package controller;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 
 import dto_request.JWToken;
 import dto_request.UserDTO;
-import dto_request.UserDTOJWT;
 import dto_request.UserRegisterDTO;
 import extractor.Extractor;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import model.User;
-import repository.UserRepository;
 import service.AuthenticationService;
 
 @Path("/auth")
@@ -60,7 +47,7 @@ public class AuthenticationController {
 		
 		JWToken jwtoken = new JWToken();
 		
-		if(as.isExist(user.getUsername(), user.getPassword())) {
+		if(as.isExist(user.getUsername())) {
 			jwtoken.setText("User aleready exist in system.");
 			return Response.status(400).entity(jwtoken).type(MediaType.APPLICATION_JSON).build();
 		}

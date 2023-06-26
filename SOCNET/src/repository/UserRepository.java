@@ -59,8 +59,8 @@ public class UserRepository {
 
 			users = stream.map(e -> new User(e.split("\\|")[0], e.split("\\|")[1], e.split("\\|")[2], e.split("\\|")[3],
 					e.split("\\|")[4], Long.parseLong(e.split("\\|")[5]), e.split("\\|")[6], e.split("\\|")[7],
-					"", Boolean.parseBoolean(e.split("\\|")[8]),
-					Boolean.parseBoolean(e.split("\\|")[9]))).collect(Collectors.toList());
+					e.split("\\|")[8], Boolean.parseBoolean(e.split("\\|")[9]),
+					Boolean.parseBoolean(e.split("\\|")[10]))).collect(Collectors.toList());
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -76,7 +76,7 @@ public class UserRepository {
 	public Boolean updateUser(User u) {
 		
 		String usr = u.getUsername() + "|" + u.getPassword() + "|" + u.getEmail()+"|" + u.getFirstName() + "|" + u.getLastName()
-		+ "|" + u.getDateOfBrith() + "|" + u.getGender() + "|" + u.getRole() + "|"  + u.getIsPrivate() + "|" +  u.getActive();
+		+ "|" + u.getDateOfBrith() + "|" + u.getGender() + "|" + u.getRole() + "|" + u.getProfilImage() + "|"  + u.getIsPrivate() + "|" +  u.getActive();
 		
 		List<String> fileContent;
 		try {
@@ -149,14 +149,14 @@ public class UserRepository {
 
 	public List<User> getAllUsers() {
 
-		return loadUsers();
+		return loadUsers().stream().filter(u->u.getActive()).collect(Collectors.toList());
 
 	}
 
 	public void saveUser(User u) {
 	
 		String usr = '\n'+u.getUsername() + "|" + u.getPassword() + "|" + u.getEmail()+"|" + u.getFirstName() + "|" + u.getLastName()
-					+ "|" + u.getDateOfBrith() + "|" + u.getGender() + "|" + u.getRole()+ "|" + u.getIsPrivate() + "|" +  u.getActive();
+					+ "|" + u.getDateOfBrith() + "|" + u.getGender() + "|" + u.getRole() + "|" + u.getProfilImage() + "|" + u.getIsPrivate() + "|" +  u.getActive();
 
 		try {
 		    Files.write(Paths.get(fileName),usr.getBytes() , StandardOpenOption.APPEND);
@@ -166,9 +166,9 @@ public class UserRepository {
 	}
 
 	
-	public Optional<User> findUserById(String uuid) {
+	public Optional<User> findUserByUsername(String username) {
 		
-		return loadUsers().stream().filter(u->u.getUsername().equals(uuid)).findFirst();
+		return loadUsers().stream().filter(u->u.getUsername().equals(username)).findFirst();
 
 	}
 	

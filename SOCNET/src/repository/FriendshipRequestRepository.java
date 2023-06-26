@@ -68,6 +68,8 @@ public class FriendshipRequestRepository {
 		
 		List<String> fileContent;
 		
+		Boolean answer = false;
+		
 		try {
 			
 			fileContent = new ArrayList<>(Files.readAllLines(Path.of(fileName), StandardCharsets.UTF_8));
@@ -88,6 +90,8 @@ public class FriendshipRequestRepository {
 
 			    	fileContent.set(i, id + "|" + sent + "|" + receive + "|" + date + "|" + newStatus );
 			    	
+			    	answer = true;
+			    	
 			        break;
 			        
 			    }
@@ -105,7 +109,7 @@ public class FriendshipRequestRepository {
 			e1.printStackTrace();
 		}
 
-		return true;
+		return answer;
 	}
 	
 	
