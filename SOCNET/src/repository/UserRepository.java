@@ -156,7 +156,7 @@ public class UserRepository {
 	public void saveUser(User u) {
 	
 		String usr = '\n'+u.getUsername() + "|" + u.getPassword() + "|" + u.getEmail()+"|" + u.getFirstName() + "|" + u.getLastName()
-					+ "|" + u.getDateOfBrith() + "|" + u.getGender() + "|" + u.getRole() + "|" + u.getProfilImage() + "|" + u.getIsPrivate() + "|" +  u.getActive();
+					+ "|" + u.getDateOfBrith() + "|" + u.getGender() + "|" + u.getRole() + "|"  + "|" + u.getIsPrivate() + "|" +  u.getActive();
 
 		try {
 		    Files.write(Paths.get(fileName),usr.getBytes() , StandardOpenOption.APPEND);

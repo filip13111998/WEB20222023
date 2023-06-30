@@ -12,19 +12,45 @@ public class UserBasicProfileRepsonseDTO {
 
 	private String username;
 	
+	private boolean isPriv;
+	
+	private String status;
 	
 	public UserBasicProfileRepsonseDTO() {
 
 	}
 
+	
+	
+
+
 	public UserBasicProfileRepsonseDTO(String firstName, String lastName, Long dateOfBrith, String profilImage,
-			String username) {
+			String username, boolean isPriv, String status) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBrith = dateOfBrith;
 		this.profilImage = profilImage;
 		this.username = username;
+		this.isPriv = isPriv;
+		this.status = status;
+	}
+
+	public boolean isPriv() {
+		return isPriv;
+	}
+
+
+	public void setPriv(boolean isPriv) {
+		this.isPriv = isPriv;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getFirstName() {

@@ -16,6 +16,7 @@ public class SearchUsersDTO {
 	
 	private boolean datesort;
 
+
 	public String getFirstname() {
 		return firstname;
 	}
@@ -69,17 +70,6 @@ public class SearchUsersDTO {
 	}
 
 	public void setDatesort(boolean datesort) {
-		this.datesort = datesort;
-	}
-
-	public SearchUsersDTO(String firstname, String lastname, Long startdate, Long enddate, boolean firstnamesort,
-			boolean lastnamesort, boolean datesort) {
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.startdate = startdate;
-		this.enddate = enddate;
-		this.firstnamesort = firstnamesort;
-		this.lastnamesort = lastnamesort;
 		this.datesort = datesort;
 	}
 

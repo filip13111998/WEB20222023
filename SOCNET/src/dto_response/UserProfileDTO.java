@@ -20,6 +20,8 @@ public class UserProfileDTO {
 	
 	private String gender;
 	
+	private Boolean priv;
+	
 	private String profilImage;
 	
 	private List<Post> posts = new ArrayList<Post>();
@@ -29,6 +31,17 @@ public class UserProfileDTO {
 	public UserProfileDTO() {
 
 	}
+
+
+	public Boolean getPriv() {
+		return priv;
+	}
+
+
+	public void setPriv(Boolean priv) {
+		this.priv = priv;
+	}
+
 
 	public String getPassword() {
 		return password;

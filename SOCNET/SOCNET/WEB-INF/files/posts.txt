@@ -1,4 +1,4 @@
-ce80e8eb-1a7c-43e5-aa7e-628fb2dcb73c|kola.jpg|NEKI TEKST ZA SLIKICU KOLA!|zile|true
-0d2794f2-2c0f-4872-9444-d744b94f9e8d|mac.jpg|MAC FAST FOOD|aa|true
-fed4b441-d59d-4d6f-bb50-21bc55bb79ba|porsche.jpg|PORSCHE TURBO|zile|true
+8ea1a251-219a-41f7-86e4-e9ac343f3d5f|kola.jpg|NEKI TEKST ZA SLIKICU KOLA!|zile|true
+1281b1d6-d4d1-474a-8808-90d39554a277|mac.jpg|MAC FAST FOOD|aa|true
+268f65e8-ddc2-47d7-91bd-0b8fbb03d596|porsche.jpg|PORSCHE TURBO|zile|true
 6d8db6b9-f2c7-4c49-9479-ceae59edff4c|bb_test.png|NOVI POST JEAAA!|bb|true

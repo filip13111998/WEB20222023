@@ -1,7 +1,12 @@
 package dto_request;
 
-public class UserDTO {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+//@JsonPropertyOrder({ "username", "password" })
+
+public class UserDTO {
+	
 	private String username;
 	
 	private String password;

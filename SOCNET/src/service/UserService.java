@@ -1,6 +1,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,11 +16,14 @@ import dto_response.UserBasicProfileRepsonseDTO;
 import dto_response.UserProfileDTO;
 import model.User;
 import repository.UserRepository;
+import util.ImageUtil;
 
 public class UserService {
 
 	private UserRepository ur = new UserRepository();
 
+	FriendshipRequestService frs = new FriendshipRequestService();
+	
 	public UserProfileDTO getProfilData(String username) {
 
 		User us = ur.getAllUsers().stream()
@@ -34,10 +38,15 @@ public class UserService {
 		updto.setLastName(us.getLastName());
 		updto.setGender(us.getGender());
 		updto.setPassword(us.getPassword());
-		updto.setProfilImage(us.getProfilImage());
+		if(us.getProfilImage().length()>1) {
+			updto.setProfilImage(Base64.getEncoder().encodeToString(ImageUtil.loadImage(us.getProfilImage())));
+		}
+		else {
+			updto.setProfilImage(Base64.getEncoder().encodeToString(ImageUtil.loadImage("bb_test.png")));
+		}
 		updto.setImages(us.getImages());
 		updto.setPosts(us.getPosts());
-		
+		updto.setPriv(us.getIsPrivate());
 
 		return updto;
 	}
@@ -59,16 +68,16 @@ public class UserService {
 		us.setFirstName(updto.getFirstName());
 		us.setLastName(updto.getLastName());
 		us.setGender(updto.getGender());
+		us.setIsPrivate(updto.isPriv());
 		
 		ur.updateUser(us);
-		
-//		ur.saveUsers();
 
 		return true;
 	}
 
 	public List<SearchedUserDTO> search(SearchUsersDTO sudto) {
-		
+
+
 		Set<SearchedUserDTO> fname = UserRepository.loadUsers().stream()
 				.filter(e->e.getFirstName().equals(sudto.getFirstname()))
 				.map(e-> new SearchedUserDTO(e.getUsername(),e.getEmail(),e.getFirstName(),e.getLastName(),e.getDateOfBrith()))
@@ -79,12 +88,11 @@ public class UserService {
 				.map(e-> new SearchedUserDTO(e.getUsername(),e.getEmail(),e.getFirstName(),e.getLastName(),e.getDateOfBrith()))
 				.collect(Collectors.toSet());
 		
-		
 		Set<SearchedUserDTO> date = UserRepository.loadUsers().stream()
 				.filter(e->e.getDateOfBrith()> sudto.getStartdate() && e.getDateOfBrith() < sudto.getEnddate())
 				.map(e-> new SearchedUserDTO(e.getUsername(),e.getEmail(),e.getFirstName(),e.getLastName(),e.getDateOfBrith()))
 				.collect(Collectors.toSet());
-		
+
 		if(!sudto.getFirstname().equals("") && fname.size()==0) {
 			System.out.println("FNAME USO");
 			return new ArrayList<SearchedUserDTO>();
@@ -130,7 +138,7 @@ public class UserService {
 		return result;
 	}
 
-	public UserBasicProfileRepsonseDTO getUserBasicProfileData(String username) {
+	public UserBasicProfileRepsonseDTO getUserBasicProfileData(String username , String myus) {
 		
 		Optional<User> userOptional = ur.findUserByUsername(username);
 		
@@ -139,7 +147,7 @@ public class UserService {
 			
 			User user = userOptional.get();
 			
-			UserBasicProfileRepsonseDTO ubprdto = new UserBasicProfileRepsonseDTO(user.getFirstName(), user.getLastName(), user.getDateOfBrith(), user.getProfilImage() , username);
+			UserBasicProfileRepsonseDTO ubprdto = new UserBasicProfileRepsonseDTO(user.getFirstName(), user.getLastName(), user.getDateOfBrith(), user.getProfilImage() , username , user.getIsPrivate() , frs.isFriend(myus, username));
 					
 			return ubprdto;
 		}

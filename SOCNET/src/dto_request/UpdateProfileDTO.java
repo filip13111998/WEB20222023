@@ -20,10 +20,19 @@ public class UpdateProfileDTO {
 	
 	private String gender;
 	
-	
+	private boolean priv;
 
 	public UpdateProfileDTO() {
 
+	}
+	
+
+	public boolean isPriv() {
+		return priv;
+	}
+
+	public void setPriv(boolean priv) {
+		this.priv = priv;
 	}
 
 	public String getPassword() {

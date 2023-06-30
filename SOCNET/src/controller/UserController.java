@@ -37,8 +37,8 @@ public class UserController {
 	@GET
 	@Path("/getData")
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserProfileDTO get(@Context HttpServletRequest request) {
-		
+	public Response get(@Context HttpServletRequest request) {
+		System.out.println("DATA SENT");
 		String auth = request.getHeader("Authorization");
 		System.out.println("Authorization: " + auth);
 		if ((auth != null) && (auth.contains("Bearer "))) {
@@ -48,12 +48,12 @@ public class UserController {
 			    Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(Extractor.key).build().parseClaimsJws(jwt);
 			    // ako nije bacio izuzetak, onda je OK
 			    String su = claims.getBody().get("username", String.class);
-				return us.getProfilData(su);
+				return Response.status(200).entity(us.getProfilData(su)).type(MediaType.APPLICATION_JSON).build();
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
-		return null;
+		return Response.status(400).entity("NO DATA").type(MediaType.APPLICATION_JSON).build();
 	}
 	
 	@GET
@@ -68,12 +68,14 @@ public class UserController {
 	}
 	
 	@GET
-	@Path("/get/{profileUsername}")
+	@Path("/get/{profileUsername}/{myus}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProfileData(@Context HttpServletRequest request ,@Context HttpServletResponse response , @PathParam("profileUsername") String profileUsername) throws IOException {
-		
-		UserBasicProfileRepsonseDTO profile  = us.getUserBasicProfileData(profileUsername);
-	    
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getProfileData(@Context HttpServletRequest request ,@Context HttpServletResponse response , @PathParam("profileUsername") String profileUsername , @PathParam("myus") String myus) throws IOException {
+		System.out.println(profileUsername);
+		System.out.println("ULET");
+		UserBasicProfileRepsonseDTO profile  = us.getUserBasicProfileData(profileUsername , myus);
+
 		// Encode image data as Base64
 	    if(profile.getProfilImage().length()>0) {
 	    	
@@ -84,11 +86,11 @@ public class UserController {
 	    }
 	    else {
 
-	    	profile.setProfilImage("");
+	    	profile.setProfilImage(Base64.getEncoder().encodeToString(ImageUtil.loadImage("bb_test.png")));
 	    	
 	    }
 
-		return Response.ok(profile).build();
+		return Response.status(200).entity(profile).type(MediaType.APPLICATION_JSON).build();
 	}
 	
 //	@GET
@@ -102,11 +104,11 @@ public class UserController {
 	@Path("/update")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Boolean update(@Context HttpServletRequest request,UpdateProfileDTO updto) {
+	public Response update(@Context HttpServletRequest request,UpdateProfileDTO updto) {
 		
 		String username = Extractor.getUsernameFromToken(request);
 		
-		return us.updateProfile(username,updto);
+		return Response.status(200).entity(us.updateProfile(username,updto)).type(MediaType.APPLICATION_JSON).build();
 		
 	}
 	
@@ -122,9 +124,9 @@ public class UserController {
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<SearchedUserDTO> search(@Context HttpServletRequest request,SearchUsersDTO sudto) {
+	public Response search(@Context HttpServletRequest request,SearchUsersDTO sudto) {
 		
-		return us.search(sudto);
+		return Response.status(200).entity(us.search(sudto)).type(MediaType.APPLICATION_JSON).build();
 		
 	}
 	

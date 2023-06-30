@@ -6,6 +6,18 @@ public class FriendshipRequestSimpleDTO {
 	
 	private String userReceive;
 
+	private String status;
+	
+	
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String getUserSent() {
 		return userSent;
 	}

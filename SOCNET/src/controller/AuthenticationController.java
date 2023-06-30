@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -32,6 +33,18 @@ public class AuthenticationController {
 	
 	private AuthenticationService as = new AuthenticationService();
 	
+	@GET
+	@Path("/zika/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response zika(@PathParam("id") String id) {
+		System.out.println("DOLAZZZZ" + id);
+		System.out.println("KRAJJ");
+		
+//		List<String> names = Arrays.asList("zika" , "mika","pera");
+		return Response.status(200).entity("zika " + id).type(MediaType.APPLICATION_JSON).build();
+	}
+	
 	/**
 	 * Registracija korisnika.
 	 */
@@ -39,7 +52,7 @@ public class AuthenticationController {
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response register(@Context HttpServletRequest request,UserRegisterDTO user) {
+	public Response register(@Context HttpServletRequest request, UserRegisterDTO user) {
 		
 //		System.out.println(request.getServletContext().getResourceAsStream("WEB-INF/files/users.txt"));
 		
@@ -57,7 +70,7 @@ public class AuthenticationController {
 		u.setActive(true);
 		u.setDateOfBrith(user.getDateOfBrith());
 		u.setEmail(user.getEmail());
-		u.setFirstName(user.getUsername());
+		u.setFirstName(user.getFirstName());
 		u.setLastName(user.getLastName());
 		u.setGender(user.getGender());
 		u.setUsername(user.getUsername());
@@ -100,11 +113,11 @@ public class AuthenticationController {
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response login(@Context HttpServletRequest request,UserDTO user) {
+	public Response login(UserDTO user) {
 		
 //		System.out.println("USAO");
 //		UserRepository.sc = request.getServletContext();
-		
+		System.out.println("STRRR");
 		
 		JWToken jwtoken = new JWToken();
 		

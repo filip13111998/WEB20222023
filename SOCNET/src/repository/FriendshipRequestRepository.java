@@ -112,6 +112,53 @@ public class FriendshipRequestRepository {
 		return answer;
 	}
 	
+	public Boolean getStatus(String uuid , String newStatus) {
+		
+		List<String> fileContent;
+		
+		Boolean answer = false;
+		
+		try {
+			
+			fileContent = new ArrayList<>(Files.readAllLines(Path.of(fileName), StandardCharsets.UTF_8));
+			
+			for (int i = 0; i < fileContent.size(); i++) {
+
+				String id = fileContent.get(i).strip().split("\\|")[0];
+				
+				String sent = fileContent.get(i).strip().split("\\|")[1];
+				
+				String receive = fileContent.get(i).strip().split("\\|")[2];
+				
+				String date = fileContent.get(i).strip().split("\\|")[3];
+				
+				String status = fileContent.get(i).strip().split("\\|")[4];
+
+				if (id.equals(uuid)) {
+
+			    	fileContent.set(i, id + "|" + sent + "|" + receive + "|" + date + "|" + newStatus );
+			    	
+			    	answer = true;
+			    	
+			        break;
+			        
+			    }
+				
+			}
+			
+			fileContent.set((fileContent.size()-1),fileContent.get(fileContent.size()-1).replaceAll("[\n\r]+$", ""));
+			
+//			fileContent.forEach(System.out::println);
+			
+			Files.writeString(Path.of(fileName), String.join("\n",fileContent), Charset.forName("UTF-8"));
+
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		return answer;
+	}
 	
 //	public Boolean delete(String uuid) {
 //		
