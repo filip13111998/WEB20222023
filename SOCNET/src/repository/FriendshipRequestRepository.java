@@ -57,6 +57,25 @@ public class FriendshipRequestRepository {
 		return mfdtol;
 	}
 	
+	public List<MyFriendDTO> getWaitFriendsWithType(String username,String type) {
+		
+		List<MyFriendDTO> mfdtol = new ArrayList<MyFriendDTO>();
+		try (Stream<String> stream = Files.lines(Paths.get(  fileName )) ){
+
+			mfdtol = stream
+					.filter(f-> (f.split("\\|")[2].equals(username)) &&  f.split("\\|")[4].equals(type))
+					.map(e -> new MyFriendDTO(e.split("\\|")[0],this.checkUsername(e.split("\\|")[1],e.split("\\|")[2],username),Long.parseLong(e.split("\\|")[3])))
+					.collect(Collectors.toList());
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
+		// TODO Auto-generated method stub
+		return mfdtol;
+	}
+	
 	public String checkUsername(String sent,String receive,String username) {
 		if(username.equals(sent)) {
 			return receive;
@@ -64,7 +83,7 @@ public class FriendshipRequestRepository {
 		return sent;
 	}
 
-	public Boolean setStatus(String uuid , String newStatus) {
+	public Boolean setStatus(String uuid , String newStatus , String userSent) {
 		
 		List<String> fileContent;
 		
@@ -76,6 +95,8 @@ public class FriendshipRequestRepository {
 			
 			for (int i = 0; i < fileContent.size(); i++) {
 
+				String tempUser = "";
+				
 				String id = fileContent.get(i).strip().split("\\|")[0];
 				
 				String sent = fileContent.get(i).strip().split("\\|")[1];
@@ -86,6 +107,12 @@ public class FriendshipRequestRepository {
 				
 				String status = fileContent.get(i).strip().split("\\|")[4];
 
+				if(userSent.equals(receive) && newStatus.equals("WAIT")) {
+					tempUser = sent;
+					sent = receive;
+					receive = tempUser;
+				}
+				
 				if (id.equals(uuid)) {
 
 			    	fileContent.set(i, id + "|" + sent + "|" + receive + "|" + date + "|" + newStatus );

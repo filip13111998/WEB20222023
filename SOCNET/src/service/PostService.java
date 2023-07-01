@@ -35,6 +35,11 @@ public class PostService {
 	public Boolean deletePost(String postId , String username){
 		return pr.deletePost(postId , username);
 	}
+
+	public Boolean profileImagePost(String postId, String username) {
+		// TODO Auto-generated method stub
+		return pr.profileImagePost(postId , username);
+	}
 	
 
 	

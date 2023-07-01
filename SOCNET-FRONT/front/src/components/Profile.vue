@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
-    <register-menu ></register-menu>
-    <!-- <user-menu v-if="tokenExists"></user-menu> -->
+    <user-menu></user-menu>
     <div style="width: 20%;margin-left:40%;margin-top:5%">
       <b-form @submit="onSubmit">
         <b style="color: rgb(224, 184, 25);">USER PROFILE</b>
@@ -54,55 +53,34 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-button @click="addOrRemoveFriend" pill style="margin-top: 1em;" >{{ this.form.status }}</b-button>
       </b-form>
-      <b style="color: red;margin-top:1em;" v-if="form.priv && form.status !== 'ACCEPT'">ACCOUNT IS PRIVATE</b>
+      <b style="color: red;margin-top:1em;" v-if="form.priv">ACCOUNT IS PRIVATE</b>
+      <div style="margin-top:1em;" v-if="!form.priv">
 
-    </div>
-
-    <div class="row" style="margin-top:1em;" v-if="!form.priv || form.status == 'ACCEPT'">
-      <div class="col-4">
-        <!-- Left Div -->
-        <b>TOGETHER FRIENDS</b>
-
-          <div style="margin-top:1em;">
-            <div style="margin-top:1em;" v-for="u in users" :key="u.id">
-              <!-- <b>ID: {{ u.id }} </b> -->
-              <b>USERNAME: {{ u.username }} </b>
-              <!-- <b>DATE: {{ u.date }} </b> -->
-              <!-- <b-button @click="removeFriend(u.username , 'NO')" pill style="margin-top: 1em;"  variant="danger">REMOVE</b-button> -->
-              <router-link :to="`/friend-profile/${u.username}`">View Profile</router-link>
-            </div>
-          </div>
-
-      </div>
-      <div class="col-8">
-        <!-- Right Div -->
-        <div>
           <div style="margin-top:1em;" v-for="p in posts" :key="p.id">
-            <router-link :to="`/friend-post/${p.uuid}`">View Details</router-link>
-
             <b>{{ p.uuid }} </b>
             <b>{{ p.username }} </b>
             <b>{{ p.text }} </b>
+            <!-- <img style="width: 10em;height:10em;" /> -->
             <div style="margin-top: 1em;">
               <img style="width: 10em; height: 10em;" :src="'data:image/png;base64,' + p.image" alt="Image" />
             </div>
+            <!-- <b>{{ p.image }} </b> -->
+            <!-- <router-link v-if="hasToken" :to="`/friend-profile/${u.username}`">View Profile</router-link> -->
+            <!-- <router-link  v-if="!hasToken" :to="`/profile/${u.username}`">View Profile</router-link> -->
+            <!-- <a href="/friend-profile/"+ u.username>View Profile</a> -->
           </div>
-      </div>
+
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
-import RegisterMenu from './RegisterMenu.vue'
 import UserMenu from './UserMenu.vue'
 export default {
-  name: 'FriendProfile',
+  name: 'UserHome',
   components: {
-    RegisterMenu,
     UserMenu
   },
   data () {
@@ -117,45 +95,29 @@ export default {
         priv: false,
         status: ''
       },
-      posts: null,
-      users: null
+      posts: null
     }
-  },
-  computed: {
-    tokenExists () {
-      return localStorage.getItem('token') !== null
-    }
-    // buttonText () {
-    //   if (this.form.status === 'WAIT') {
-    //     return 'WAIT'
-    //   }
-    //   return this.form.isFriend ? 'DELETE' : 'ADD'
-    // }
   },
   created () {
     // This code will be executed when the component is loaded
     console.log('Component loaded!')
     // You can call your methods or perform any desired operations here
     this.onLoad()
-    this.together()
   },
-  filters: {
-    formatDate (timestamp) {
-      const date = new Date(timestamp)
-      return date.toLocaleString() // Adjust the format based on your requirements
-    }
-  },
+  // computed: {
+  //   baseConverter (url) {
+  //     return function (url) {
+  //       return 'data:image/png;base64,' + url
+  //     }
+  //   }
+  // },
   methods: {
     onLoad () {
       let usrn = this.$route.params.username
       var self = this
       var xhr = new XMLHttpRequest()
 
-      let usern = JSON.parse(atob(localStorage.getItem('token').split('.')[1]))['username']
-      console.log(usern)
-      let usr2 = usern !== '' ? usern : '_'
-      console.log(usr2)
-      xhr.open('GET', 'http://localhost:8083/SOCNET/rest/user/get/' + usrn + '/' + usr2, true)
+      xhr.open('GET', 'http://localhost:8083/SOCNET/rest/user/get/' + usrn, true)
       xhr.setRequestHeader('Content-type', 'application/json')
       // xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'))
       xhr.onload = function () {
@@ -173,7 +135,7 @@ export default {
           self.form.status = responseData.status
 
           var self2 = self
-          if (responseData.priv === false || responseData.status === 'ACCEPT') {
+          if (responseData.priv === false) {
             xhr.open('GET', 'http://localhost:8083/SOCNET/rest/post/getAll/' + usrn, true)
             xhr.setRequestHeader('Content-type', 'application/json')
             xhr.onload = function () {
@@ -184,34 +146,8 @@ export default {
             }
             xhr.send()
           }
-
-          console.log(responseData) // Output the response data
-        } else {
-          // Request failed
-          console.error('Request failed with status ' + xhr.status)
-        }
-      }
-      // Send the request
-      xhr.send()
-    },
-    together () {
-      var self = this
-
-      var xhr = new XMLHttpRequest()
-
-      let usern = JSON.parse(atob(localStorage.getItem('token').split('.')[1]))['username']
-      let usern2 = this.$route.params.username
-      xhr.open('GET', 'http://localhost:8083/SOCNET/rest/frendrequest/togetherFriends/' + usern + '/' + usern2, true)
-
-      xhr.setRequestHeader('Content-type', 'application/json')
-
-      xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'))
-
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          // Request was successful
-          var responseData = JSON.parse(xhr.responseText)
-          self.users = responseData
+          // self.form.gender = responseData.gender
+          // self.form.isPrivate = responseData.priv
           console.log(responseData) // Output the response data
         } else {
           // Request failed
@@ -223,35 +159,6 @@ export default {
     },
     onSubmit (event) {
 
-    },
-    addOrRemoveFriend (event) {
-      let usern = JSON.parse(atob(localStorage.getItem('token').split('.')[1]))['username']
-      var self = this
-      const data = {
-        userSent: usern,
-        userReceive: this.form.username,
-        status: self.form.status === 'NO' ? 'WAIT' : 'NO'
-      }
-      var xhr = new XMLHttpRequest()
-      xhr.open('POST', 'http://localhost:8083/SOCNET/rest/frendrequest/save', true)
-      xhr.setRequestHeader('Content-type', 'application/json')
-      // xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'))
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          // Request was successful
-          var responseData = JSON.parse(xhr.responseText)
-          if (responseData) {
-            // window.alert('jeaa')
-            self.form.status = self.form.status === 'WAIT' || self.form.status === 'ACCEPT' ? 'NO' : 'WAIT'
-          }
-          console.log(responseData) // Output the response data
-        } else {
-          // Request failed
-          console.error('Request failed with status ' + xhr.status)
-        }
-      }
-      // Send the request
-      xhr.send(JSON.stringify(data))
     }
   }
 }

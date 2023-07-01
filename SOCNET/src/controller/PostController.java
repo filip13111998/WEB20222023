@@ -34,6 +34,18 @@ public class PostController {
 	}
 	
 	@GET
+	@Path("/getAll/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response findAllPostsByUsername(@Context HttpServletRequest request , @PathParam("username") String username) {
+		
+//		String username = Extractor.getUsernameFromToken(request);
+		
+		return Response.ok(ps.findAllPostsByUsername(username)).build();
+
+	}
+	
+	@GET
 	@Path("/get/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -50,6 +62,8 @@ public class PostController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response savePost(@Context HttpServletRequest request,PostSaveRequestDTO psrdto) {
 			
+		System.out.println("SAVEEE");
+		
 		String username = Extractor.getUsernameFromToken(request);
 		
 		return Response.ok(ps.savePost(psrdto , username)).build();
@@ -66,6 +80,18 @@ public class PostController {
 		String username = Extractor.getUsernameFromToken(request);
 		
 		return Response.ok(ps.deletePost(postId , username)).build();
+
+	}
+	
+	@GET
+	@Path("/profile/{postId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response profileImagePost(@Context HttpServletRequest request , @PathParam("postId") String postId) {
+		
+		String username = Extractor.getUsernameFromToken(request);
+		
+		return Response.ok(ps.profileImagePost(postId , username)).build();
 
 	}
 	

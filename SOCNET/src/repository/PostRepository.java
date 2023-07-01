@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import dto_request.PostSaveRequestDTO;
 import dto_response.PostDetailViewDTO;
 import model.Post;
+import model.User;
 import util.ImageUtil;
 
 
@@ -33,7 +34,7 @@ public class PostRepository {
 		try (Stream<String> stream = Files.lines(Paths.get(  fileName )) ){
 
 			posts = stream
-					.map(e -> new Post(e.split("\\|")[0], e.split("\\|")[1], e.split("\\|")[2] , e.split("\\|")[3]))
+					.map(e -> new Post(e.split("\\|")[0], PostRepository.loadImage(e.split("\\|")[1]), e.split("\\|")[2] , e.split("\\|")[3] , Boolean.parseBoolean(e.split("\\|")[4])))
 					.collect(Collectors.toList());
 
 		} catch (IOException e) {
@@ -43,9 +44,23 @@ public class PostRepository {
 		return posts;
 	}
 	
+	public static String loadImage(String name) {
+
+		if(name.length()>0) {
+	    	
+	    	String encodedImage = Base64.getEncoder().encodeToString(ImageUtil.loadImage(name));
+	    	
+	    	return encodedImage;
+
+	    }
+		
+    	return "";
+	    	
+	}
+	
 	public static List<Post> findAllPostsByUsername(String username){
 		
-		return loadPosts().stream().filter(p->p.getUsername().equals(username)).collect(Collectors.toList());
+		return loadPosts().stream().filter(p->p.getUsername().equals(username) && p.isActive()).collect(Collectors.toList());
 		
 	}
 	
@@ -79,8 +94,6 @@ public class PostRepository {
 		
 		try {
 		    Files.write(Paths.get(fileName),post.getBytes() , StandardOpenOption.APPEND);
-		
-		    System.out.println(p.getBase64());
 		    
 //		    byte[] decodedData = Base64.getDecoder().decode(p.getBase64());
 		    
@@ -91,6 +104,7 @@ public class PostRepository {
 //                    .decode(p.getBase64().getBytes(StandardCharsets.UTF_8));
 		    
 		    String base64Image = p.getBase64().split(",")[1];
+		    
 		    byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
 		    
 		    ImageUtil.saveImage(imageBytes, p.getImage());
@@ -147,6 +161,32 @@ public class PostRepository {
 			e1.printStackTrace();
 		}
 
+		return true;
+	}
+
+	public Boolean profileImagePost(String postId, String username) {
+		// TODO Auto-generated method stub
+		UserRepository ur = new UserRepository();
+		
+		Optional<User> userOptional = ur.findUserByUsername(username);
+//		Post post = this.findPostById(postId);
+
+		try (Stream<String> stream = Files.lines(Paths.get(  fileName )) ){
+
+			posts = stream
+					.map(e -> new Post(e.split("\\|")[0], e.split("\\|")[1], e.split("\\|")[2] , e.split("\\|")[3] , Boolean.parseBoolean(e.split("\\|")[4])))
+					.collect(Collectors.toList());
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Post post = posts.stream().filter(p->p.getUuid().equals(postId)).findFirst().get();
+		
+		if(userOptional.isPresent()) {
+			User user = userOptional.get();
+			user.setProfilImage(post.getImage());
+			ur.updateUser(user);
+		}
 		return true;
 	}
 	

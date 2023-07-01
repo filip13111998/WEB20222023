@@ -15,7 +15,7 @@ public class Post {
 
 	private String username;
 	
-	
+	private boolean active;
 
 
 	public Post(String uuid, String image, String text, String username) {
@@ -40,6 +40,25 @@ public class Post {
 	}
 	
 	
+
+	public Post(String uuid, String image, String text, String username, boolean active) {
+		super();
+		this.uuid = uuid;
+		this.image = image;
+		this.text = text;
+		this.username = username;
+		this.active = active;
+	}
+
+	
+	
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
 	public String getUsername() {
 		return username;
@@ -84,7 +103,8 @@ public class Post {
 	@Override
 	public String toString() {
 		return "Post [uuid=" + uuid + ", image=" + image + ", text=" + text + ", comments=" + comments + ", username="
-				+ username + "]";
+				+ username + ", active=" + active + "]";
 	}
+
 	
 }

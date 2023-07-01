@@ -38,9 +38,9 @@ public class UserController {
 	@Path("/getData")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@Context HttpServletRequest request) {
-		System.out.println("DATA SENT");
+
 		String auth = request.getHeader("Authorization");
-		System.out.println("Authorization: " + auth);
+
 		if ((auth != null) && (auth.contains("Bearer "))) {
 			String jwt = auth.substring(auth.indexOf("Bearer ") + 7);
 			try {
@@ -59,11 +59,20 @@ public class UserController {
 	@GET
 	@Path("/get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserProfileDTO getProfileData(@Context HttpServletRequest request) {
+	public Response getProfileData(@Context HttpServletRequest request) {
 		
 		String username = Extractor.getUsernameFromToken(request);
+		return Response.status(200).entity(us.getProfilData(username)).type(MediaType.APPLICATION_JSON).build();
+//		return us.getProfilData(username);
 		
-		return us.getProfilData(username);
+	}
+	
+	@GET
+	@Path("/get/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getProfileData(@Context HttpServletRequest request , @PathParam("username") String username) {
+
+		return Response.status(200).entity(us.getProfilData(username)).type(MediaType.APPLICATION_JSON).build();
 		
 	}
 	
@@ -72,8 +81,7 @@ public class UserController {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getProfileData(@Context HttpServletRequest request ,@Context HttpServletResponse response , @PathParam("profileUsername") String profileUsername , @PathParam("myus") String myus) throws IOException {
-		System.out.println(profileUsername);
-		System.out.println("ULET");
+
 		UserBasicProfileRepsonseDTO profile  = us.getUserBasicProfileData(profileUsername , myus);
 
 		// Encode image data as Base64

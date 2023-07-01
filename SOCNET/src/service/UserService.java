@@ -31,7 +31,7 @@ public class UserService {
 				.orElse(null);
 
 		UserProfileDTO updto = new UserProfileDTO();
-		
+		updto.setUsername(us.getUsername());
 		updto.setDateOfBrith(us.getDateOfBrith());
 		updto.setEmail(us.getEmail());
 		updto.setFirstName(us.getFirstName());
@@ -107,8 +107,6 @@ public class UserService {
 		}
 		
 		if(fname.size()>0 && lname.size()>0) {
-			System.out.println("TU SAM");
-			System.out.println(fname.size() +":" + lname.size());
 			fname.retainAll(lname);
 		}
 		else {

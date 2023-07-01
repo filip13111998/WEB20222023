@@ -86,56 +86,67 @@ public class FriendshipRequestController {
 	}
 	
 	@GET
-	@Path("/accept/{uuid}")
+	@Path("/togetherFriends/{user}/{another}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response accept(@Context HttpServletRequest request, @PathParam("uuid") String uuid) {
+	public Response getFriends(@Context HttpServletRequest request ,  @PathParam("user") String user , 
+			@PathParam("another") String another) {
 		
-		Boolean answer = frs.accept(uuid);
+		return Response.ok(frs.together(user , another)).build();
 		
-		if(answer) {
-			return Response.ok(answer).build();
-		}
-		else {
-			return Response.status(400).type(MediaType.APPLICATION_JSON).build();
-		}
-		
-
-
 	}
 	
-	@GET
-	@Path("/reject/{uuid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response reject(@Context HttpServletRequest request, @PathParam("uuid") String uuid) {
-		
-		Boolean answer = frs.reject(uuid);
-		
-		if(answer) {
-			return Response.ok(answer).build();
-		}
-		else {
-			return Response.status(400).type(MediaType.APPLICATION_JSON).build();
-		}
-
-	}
-	
-	@GET
-	@Path("/delete/{uuid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(@Context HttpServletRequest request, @PathParam("uuid") String uuid) {
-		
-		Boolean answer = frs.delete(uuid);
-		
-		if(answer) {
-			return Response.ok(answer).build();
-		}
-		else {
-			return Response.status(400).type(MediaType.APPLICATION_JSON).build();
-		}
-		
-	}
+//	@GET
+//	@Path("/accept/{uuid}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response accept(@Context HttpServletRequest request, @PathParam("uuid") String uuid) {
+//		
+//		Boolean answer = frs.accept(uuid);
+//		
+//		if(answer) {
+//			return Response.ok(answer).build();
+//		}
+//		else {
+//			return Response.status(400).type(MediaType.APPLICATION_JSON).build();
+//		}
+//		
+//
+//
+//	}
+//	
+//	@GET
+//	@Path("/reject/{uuid}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response reject(@Context HttpServletRequest request, @PathParam("uuid") String uuid) {
+//		
+//		Boolean answer = frs.reject(uuid);
+//		
+//		if(answer) {
+//			return Response.ok(answer).build();
+//		}
+//		else {
+//			return Response.status(400).type(MediaType.APPLICATION_JSON).build();
+//		}
+//
+//	}
+//	
+//	@GET
+//	@Path("/delete/{uuid}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response delete(@Context HttpServletRequest request, @PathParam("uuid") String uuid) {
+//		
+//		Boolean answer = frs.delete(uuid);
+//		
+//		if(answer) {
+//			return Response.ok(answer).build();
+//		}
+//		else {
+//			return Response.status(400).type(MediaType.APPLICATION_JSON).build();
+//		}
+//		
+//	}
 	
 }

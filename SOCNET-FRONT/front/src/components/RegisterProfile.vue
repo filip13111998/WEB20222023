@@ -124,6 +124,50 @@
 
     </div>
 
+    <b-form @submit="addPost" style="width: 20%;margin-left:40%;margin-top:5em">
+      <b style="color: rgb(113, 113, 236);">NEW POST</b>
+      <b-form-group
+        id="input-group-1"
+        label-for="input-1"
+        style="margin-top: 1em;"
+      >
+        <b-form-input
+          id="input-1"
+          v-model="newpost.text"
+          type="text"
+          placeholder="Enter text"
+          required
+        ></b-form-input>
+      </b-form-group>
+      <input type="file" @change="handleFileUpload">
+      <!-- <b-form-group id="input-group-2" label="Your Password:" label-for="input-2">
+        <b-form-input
+          id="input-2"
+          v-model="newpost.base64"
+          placeholder="Enter Password"
+          type="password"
+          required
+        ></b-form-input>
+      </b-form-group> -->
+      <!-- <b style="color: red;" v-if="msg">WRONG CREDENTIALS!</b> -->
+      <b-button style="margin-top:1em;" type="submit" variant="primary">CREATE</b-button>
+      <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
+    </b-form>
+
+    <div>
+      <div style="margin-top:1em;" v-for="p in posts" :key="p.id">
+        <router-link :to="`/friend-post/${p.uuid}`">View Details</router-link>
+        <b-button @click="removeMyPost(p.uuid)" pill style="margin-top:1em;" variant="danger">DELETE</b-button>
+        <b-button @click="profilePic(p.uuid)" pill style="margin-top:1em;" variant="info">SET AS PROFILE</b-button>
+
+        <b>{{ p.uuid }} </b>
+        <b>{{ p.username }} </b>
+        <b>{{ p.text }} </b>
+        <div style="margin-top: 1em;">
+          <img style="width: 10em; height: 10em;" :src="'data:image/png;base64,' + p.image" alt="Image" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -151,7 +195,13 @@ export default {
         isPrivate: null
       },
       genders: ['M', 'F'],
-      privates: [true, false]
+      privates: [true, false],
+      posts: null,
+      newpost: {
+        image: '',
+        base64: '',
+        text: ''
+      }
     }
   },
   created () {
@@ -180,7 +230,19 @@ export default {
           self.form.dateOfBrith = responseData.dateOfBrith
           self.form.gender = responseData.gender
           self.form.isPrivate = responseData.priv
+
           console.log(responseData) // Output the response data
+          let usern = JSON.parse(atob(localStorage.getItem('token').split('.')[1]))['username']
+          var self2 = self
+          xhr.open('GET', 'http://localhost:8083/SOCNET/rest/post/getAll/' + usern, true)
+          xhr.setRequestHeader('Content-type', 'application/json')
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              self2.posts = JSON.parse(xhr.responseText)
+              console.log(self2.posts)
+            }
+          }
+          xhr.send()
         } else {
           // Request failed
           console.error('Request failed with status ' + xhr.status)
@@ -232,7 +294,109 @@ export default {
       }
       // Send the request
       xhr.send(JSON.stringify(data))
+    },
+    removeMyPost (uuid) {
+      let self = this
+
+      var xhr = new XMLHttpRequest()
+
+      xhr.open('GET', 'http://localhost:8083/SOCNET/rest/post/delete/' + uuid, true)
+
+      xhr.setRequestHeader('Content-type', 'application/json')
+
+      xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          // Request was successful
+          var responseData = JSON.parse(xhr.responseText)
+          if (responseData) {
+            self.onLoad()
+          }
+          console.log(responseData) // Output the response data
+        } else {
+          // Request failed
+          console.error('Request failed with status ' + xhr.status)
+        }
+      }
+      // Send the request
+      xhr.send()
+    },
+    profilePic (uuid) {
+      let self = this
+
+      var xhr = new XMLHttpRequest()
+
+      xhr.open('GET', 'http://localhost:8083/SOCNET/rest/post/profile/' + uuid, true)
+
+      xhr.setRequestHeader('Content-type', 'application/json')
+
+      xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          // Request was successful
+          var responseData = JSON.parse(xhr.responseText)
+          if (responseData) {
+            self.onLoad()
+          }
+          console.log(responseData) // Output the response data
+        } else {
+          // Request failed
+          console.error('Request failed with status ' + xhr.status)
+        }
+      }
+      // Send the request
+      xhr.send()
+    },
+    addPost (event) {
+      event.preventDefault()
+
+      let self = this
+
+      const data = {
+        image: this.newpost.image,
+        base64: 'data:image/png;base64,' + this.newpost.base64,
+        text: this.newpost.text
+      }
+      console.log(data) // Output the
+      var xhr = new XMLHttpRequest()
+
+      xhr.open('POST', 'http://localhost:8083/SOCNET/rest/post/save', true)
+
+      xhr.setRequestHeader('Content-type', 'application/json')
+
+      xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'))
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          // Request was successful
+          var responseData = JSON.parse(xhr.responseText)
+          if (responseData) {
+            self.onLoad()
+          }
+          console.log(responseData) // Output the response data
+        } else {
+          // Request failed
+          console.error('Request failed with status ' + xhr.status)
+        }
+      }
+      // Send the request
+      xhr.send(JSON.stringify(data))
+    },
+    handleFileUpload (event) {
+      const file = event.target.files[0]
+      const reader = new FileReader()
+
+      reader.onload = () => {
+        this.newpost.base64 = reader.result.split(',')[1] // Extract base64 data
+      }
+
+      reader.readAsDataURL(file) // Convert file to base64 data
+
+      this.newpost.image = file.name // Assign the file name to the 'imageName' property
     }
+
   }
 }
 </script>

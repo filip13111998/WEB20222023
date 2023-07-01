@@ -23,6 +23,18 @@ public class CommentController {
 	
 	private CommentService cs = new CommentService();
 
+	@GET
+	@Path("/get/id")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getAll(@Context HttpServletRequest request,@PathParam("id") String id) {
+			
+		
+//		String username = Extractor.getUsernameFromToken(request);
+		
+		return Response.ok(cs.getAll(id)).build();
+		
+	}
 	
 	@POST
 	@Path("/save")

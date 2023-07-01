@@ -11,6 +11,7 @@ import FriendPost from '@/components/FriendPost'
 import Home from '@/components/Home'
 import FriendshipRequests from '@/components/FriendshipRequests'
 import Friends from '@/components/Friends'
+import Profile from '@/components/Profile'
 
 Vue.use(Router)
 
@@ -56,6 +57,11 @@ export default new Router({
       path: '/register-profile',
       name: 'register-profile',
       component: RegisterProfile
+    },
+    {
+      path: '/profile/:username',
+      name: 'profile',
+      component: Profile
     },
     {
       path: '/friend-profile/:username',

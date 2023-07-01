@@ -81,7 +81,8 @@
         <b>{{ u.firstName }} </b>
         <b>{{ u.lastName }} </b>
         <b>{{ u.username }} </b>
-        <router-link :to="`/friend-profile/${u.username}`">View Profile</router-link>
+        <router-link v-if="hasToken" :to="`/friend-profile/${u.username}`">View Profile</router-link>
+        <router-link  v-if="!hasToken" :to="`/profile/${u.username}`">View Profile</router-link>
         <!-- <a href="/friend-profile/"+ u.username>View Profile</a> -->
       </div>
     </div>
@@ -105,6 +106,12 @@ export default {
       },
       sorts: ['YES', 'NO'],
       users: null
+    }
+  },
+  computed: {
+    hasToken () {
+      // Check if the JWT token exists in localStorage
+      return localStorage.getItem('token') !== null
     }
   },
   methods: {

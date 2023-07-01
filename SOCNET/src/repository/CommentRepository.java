@@ -46,7 +46,7 @@ public static String fileName = "C:\\Users\\vaske\\Desktop\\WEB20222023\\SOCNET\
 	
 	public static List<Comment> findAllCommentsByPost(String postId){
 		
-		return loadComments().stream().filter(c->c.getPost().equals(postId)).collect(Collectors.toList());
+		return loadComments().stream().filter(c->c.getPost().equals(postId) && c.getActive() == true ).collect(Collectors.toList());
 		
 	}
 	
@@ -159,5 +159,6 @@ public static String fileName = "C:\\Users\\vaske\\Desktop\\WEB20222023\\SOCNET\
 
 		return true;
 	}
+
 	
 }

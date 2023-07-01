@@ -1,7 +1,9 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import dto_request.FriendshipRequestSimpleDTO;
@@ -18,21 +20,21 @@ public class FriendshipRequestService {
 		Optional<MyFriendDTO> m = frr.getFriendsWithType(frsdto.getUserSent(), "WAIT").stream().filter(r->r.getUsername().equals(frsdto.getUserReceive())).findFirst();
 		
 		if(m.isPresent()) {
-			frr.setStatus(m.get().getId() , frsdto.getStatus());
+			frr.setStatus(m.get().getId() , frsdto.getStatus() , frsdto.getUserSent());
 			return true;
 		}
 		
 		m = frr.getFriendsWithType(frsdto.getUserSent(), "NO").stream().filter(r->r.getUsername().equals(frsdto.getUserReceive())).findFirst();
 				
 		if(m.isPresent()) {
-			frr.setStatus(m.get().getId() , frsdto.getStatus());
+			frr.setStatus(m.get().getId() , frsdto.getStatus() , frsdto.getUserSent());
 			return true;
 		}
 		
 		m = frr.getFriendsWithType(frsdto.getUserSent(), "ACCEPT").stream().filter(r->r.getUsername().equals(frsdto.getUserReceive())).findFirst();
 		
 		if(m.isPresent()) {
-			frr.setStatus(m.get().getId() , frsdto.getStatus());
+			frr.setStatus(m.get().getId() , frsdto.getStatus() , frsdto.getUserSent());
 			return true;
 		}
 		
@@ -59,7 +61,7 @@ public class FriendshipRequestService {
 
 	public List<MyFriendDTO> getMyFriendshipRequests(String username) {
 		// TODO Auto-generated method stub
-		return frr.getFriendsWithType(username,"WAIT");
+		return frr.getWaitFriendsWithType(username,"WAIT");
 		
 	}
 	
@@ -85,20 +87,38 @@ public class FriendshipRequestService {
 		 
 		 return false;
 	}
-	
-	public Boolean accept(String uuid) {
+
+
+	public List<MyFriendDTO> together(String user, String another) {
 		// TODO Auto-generated method stub
-		return frr.setStatus(uuid , "ACCEPT");
+		Set<MyFriendDTO> mufriends = this.getFriends(user).stream().collect(Collectors.toSet());
+		
+		Set<MyFriendDTO> mufriends2 =  this.getFriends(another).stream().collect(Collectors.toSet());
+		
+		mufriends.stream().forEach(u->System.out.println(u.getUsername()));
+		mufriends2.stream().forEach(u->System.out.println(u.getUsername()));
+//		mufriends.retainAll(mufriends2);
+		mufriends2 = mufriends2.stream()
+        .filter(dto -> mufriends.stream()
+                .anyMatch(friend -> friend.getUsername().equals(dto.getUsername())))
+        .collect(Collectors.toSet());
+		
+		return new ArrayList<>(mufriends2);
 	}
 	
-	public Boolean reject(String uuid) {
-		// TODO Auto-generated method stub
-		return frr.setStatus(uuid , "REJECT");
-	}
-	
-	public Boolean delete(String uuid) {
-		// TODO Auto-generated method stub
-		return frr.setStatus(uuid , "DELETE");
-	}
+//	public Boolean accept(String uuid) {
+//		// TODO Auto-generated method stub
+//		return frr.setStatus(uuid , "ACCEPT");
+//	}
+//	
+//	public Boolean reject(String uuid) {
+//		// TODO Auto-generated method stub
+//		return frr.setStatus(uuid , "REJECT");
+//	}
+//	
+//	public Boolean delete(String uuid) {
+//		// TODO Auto-generated method stub
+//		return frr.setStatus(uuid , "DELETE");
+//	}
 
 }
