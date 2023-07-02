@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
-    <register-menu ></register-menu>
+    <register-menu v-if="!isAdmin()"></register-menu>
+    <admin-menu v-if="isAdmin()"></admin-menu>
     <!-- <user-menu v-if="tokenExists"></user-menu> -->
     <div style="width: 20%;margin-left:40%;margin-top:5%">
       <b-form @submit="onSubmit">
@@ -88,8 +89,11 @@
             <div style="margin-top: 1em;">
               <img style="width: 10em; height: 10em;" :src="'data:image/png;base64,' + p.image" alt="Image" />
             </div>
+            <router-link v-if="isAdmin(p.uuid)" :to="`/admin-delete/${p.uuid}/${p.username}`">Delete Post</router-link>
+
+            <!-- <b-button v-if="isAdmin(p.uuid)" @click="deletePost()" pill style="margin-top: 1em;" >DELETE POST</b-button> -->
           </div>
-      </div>
+        </div>
       </div>
     </div>
 
@@ -99,11 +103,13 @@
 <script>
 import RegisterMenu from './RegisterMenu.vue'
 import UserMenu from './UserMenu.vue'
+import AdminMenu from './AdminMenu.vue'
 export default {
   name: 'FriendProfile',
   components: {
     RegisterMenu,
-    UserMenu
+    UserMenu,
+    AdminMenu
   },
   data () {
     return {
@@ -252,6 +258,11 @@ export default {
       }
       // Send the request
       xhr.send(JSON.stringify(data))
+    },
+    isAdmin () {
+      let role = JSON.parse(atob(localStorage.getItem('token').split('.')[1]))['role']
+      console.log(role)
+      return role === 'ADMIN'
     }
   }
 }

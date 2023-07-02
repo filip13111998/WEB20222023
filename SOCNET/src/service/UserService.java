@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import dto_request.SearchAdminUsersDTO;
 import dto_request.SearchUsersDTO;
 import dto_request.UpdateProfileDTO;
 import dto_response.SearchedUserDTO;
@@ -152,6 +153,80 @@ public class UserService {
 		
 		return new UserBasicProfileRepsonseDTO();
 		
+	}
+
+	public List<SearchedUserDTO> searchAdmin(SearchAdminUsersDTO sudto) {
+
+		Set<SearchedUserDTO> fname = UserRepository.loadUsers().stream()
+				.filter(e->e.getFirstName().equals(sudto.getFirstname()))
+				.map(e-> new SearchedUserDTO(e.getUsername(),e.getEmail(),e.getFirstName(),e.getLastName(),e.getDateOfBrith(),e.getActive()))
+				.collect(Collectors.toSet());
+		
+		Set<SearchedUserDTO> lname = UserRepository.loadUsers().stream()
+				.filter(e->e.getLastName().equals(sudto.getLastname()))
+				.map(e-> new SearchedUserDTO(e.getUsername(),e.getEmail(),e.getFirstName(),e.getLastName(),e.getDateOfBrith() , e.getActive()))
+				.collect(Collectors.toSet());
+		
+		Set<SearchedUserDTO> date = UserRepository.loadUsers().stream()
+				.filter(e->e.getEmail().equals(sudto.getEmail()))
+				.map(e-> new SearchedUserDTO(e.getUsername(),e.getEmail(),e.getFirstName(),e.getLastName(),e.getDateOfBrith() , e.getActive()))
+				.collect(Collectors.toSet());
+
+		if(!sudto.getFirstname().equals("") && fname.size()==0) {
+			System.out.println("FNAME USO");
+			return new ArrayList<SearchedUserDTO>();
+		}
+		if(!sudto.getLastname().equals("") && lname.size()==0) {
+			System.out.println("LLLL USO");
+			return new ArrayList<SearchedUserDTO>();
+		}
+		if(!sudto.getEmail().equals("") && date.size()==0) {
+			System.out.println("MAIL USO");
+			return new ArrayList<SearchedUserDTO>();
+		}
+		
+		if(fname.size()>0 && lname.size()>0) {
+			fname.retainAll(lname);
+		}
+		else {
+			fname.addAll(lname);	
+		}
+		if(fname.size()>0 && date.size()>0) {
+			fname.retainAll(date);
+		}
+		else {
+			fname.addAll(date);
+		}
+		
+		List<SearchedUserDTO> result = new ArrayList<>(fname);
+		
+		if(sudto.isFirstnamesort()) {
+			 Collections.sort(result, Comparator.comparing(SearchedUserDTO::getFirstName,String.CASE_INSENSITIVE_ORDER));
+		}
+		
+		if(sudto.isLastnamesort()) {
+			 Collections.sort(result, Comparator.comparing(SearchedUserDTO::getLastName,String.CASE_INSENSITIVE_ORDER));
+		}
+		
+		if(sudto.isEmailsort()) {
+			 Collections.sort(result, Comparator.comparing(SearchedUserDTO::getEmail , String.CASE_INSENSITIVE_ORDER));
+		}
+		
+		return result;
+	}
+
+	public boolean delete(String username) {
+		// TODO Auto-generated method stub
+		System.out.println("ULETT " + username);
+		User us = UserRepository.loadUsers().stream()
+				.filter(u -> username.equals(u.getUsername())).findFirst()
+				.orElse(null);
+		System.out.println("STIGAOOO");
+		us.setActive(!us.getActive());
+		System.out.println("ALOO");
+		ur.updateUser(us);
+		
+		return true;
 	}
 
 }

@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.core.Response.ResponseBuilder;
+
+import dto_request.MessageReceiveDTO;
+import dto_request.PostAdminDeleteDTO;
 import dto_request.PostSaveRequestDTO;
 import dto_response.PostDetailViewDTO;
 import dto_response.PostSimpleResponseDTO;
@@ -13,6 +17,8 @@ import repository.PostRepository;
 public class PostService {
 
 	private PostRepository pr = new PostRepository();
+	
+	private MessageService ms = new MessageService();
 
 	public List<PostSimpleResponseDTO> findAllPostsByUsername(String ursername){
 		return PostRepository.findAllPostsByUsername(ursername).stream()
@@ -39,6 +45,16 @@ public class PostService {
 	public Boolean profileImagePost(String postId, String username) {
 		// TODO Auto-generated method stub
 		return pr.profileImagePost(postId , username);
+	}
+
+	public Boolean deletePostAdmin(PostAdminDeleteDTO paddto, String username) {
+		// TODO Auto-generated method stub
+		pr.deletePost(paddto.getPostId() , paddto.getUserReceive());
+		MessageReceiveDTO m = new MessageReceiveDTO();
+		m.setText(paddto.getText());
+		m.setUserReceive(paddto.getUserReceive());
+		ms.save(m, username, "ADMIN");
+		return null;
 	}
 	
 

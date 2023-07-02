@@ -1,15 +1,6 @@
 package repository;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,16 +8,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 
-import dto_response.SearchedUserDTO;
 import model.User;
 
 public class UserRepository {
@@ -152,6 +140,9 @@ public class UserRepository {
 		return loadUsers().stream().filter(u->u.getActive()).collect(Collectors.toList());
 
 	}
+	
+
+
 
 	public void saveUser(User u) {
 	
@@ -168,7 +159,7 @@ public class UserRepository {
 	
 	public Optional<User> findUserByUsername(String username) {
 		
-		return loadUsers().stream().filter(u->u.getUsername().equals(username)).findFirst();
+		return loadUsers().stream().filter(u->u.getUsername().equals(username) && u.getActive()).findFirst();
 
 	}
 	

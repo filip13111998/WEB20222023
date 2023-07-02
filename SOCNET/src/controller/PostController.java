@@ -11,6 +11,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import dto_request.PostAdminDeleteDTO;
 import dto_request.PostSaveRequestDTO;
 import extractor.Extractor;
 import service.PostService;
@@ -80,6 +81,18 @@ public class PostController {
 		String username = Extractor.getUsernameFromToken(request);
 		
 		return Response.ok(ps.deletePost(postId , username)).build();
+
+	}
+	
+	@POST
+	@Path("/delete-admin")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deletePostAdmin(@Context HttpServletRequest request , PostAdminDeleteDTO paddto) {
+		
+		String username = Extractor.getUsernameFromToken(request);
+		
+		return Response.ok(ps.deletePostAdmin(paddto , username)).build();
 
 	}
 	

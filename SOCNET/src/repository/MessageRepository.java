@@ -99,11 +99,12 @@ public class MessageRepository {
 	}
 	
 	public static boolean isAdminMessage(String message) {
-		
+		System.out.println(" DAL JE ADMINN ");
 		if(message.contains("ADMIN")) {
+			System.out.println("JESTE");
 			return true;
 		}
-		
+		System.out.println("NEE");
 		return false;
 		
 	}

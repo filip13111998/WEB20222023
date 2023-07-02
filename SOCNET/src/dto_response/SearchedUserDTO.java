@@ -11,6 +11,18 @@ public class SearchedUserDTO {
 	private String lastName;
 
 	private Long dateOfBrith;
+	
+	private boolean active;
+	
+	
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
 	public String getUsername() {
 		return username;
@@ -58,6 +70,18 @@ public class SearchedUserDTO {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBrith = dateOfBrith;
+	}
+	
+	
+
+	public SearchedUserDTO(String username, String email, String firstName, String lastName, Long dateOfBrith,
+			boolean active) {
+		this.username = username;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dateOfBrith = dateOfBrith;
+		this.active = active;
 	}
 
 	public SearchedUserDTO() {

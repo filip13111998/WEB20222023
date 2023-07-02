@@ -12,6 +12,9 @@ import Home from '@/components/Home'
 import FriendshipRequests from '@/components/FriendshipRequests'
 import Friends from '@/components/Friends'
 import Profile from '@/components/Profile'
+import ChatUsers from '@/components/ChatUsers'
+import Chat from '@/components/Chat'
+import DeletePost from '@/components/DeletePost'
 
 Vue.use(Router)
 
@@ -54,6 +57,16 @@ export default new Router({
       component: Friends
     },
     {
+      path: '/chat-users',
+      name: 'chat-users',
+      component: ChatUsers
+    },
+    {
+      path: '/chat/:username',
+      name: 'chat',
+      component: Chat
+    },
+    {
       path: '/register-profile',
       name: 'register-profile',
       component: RegisterProfile
@@ -77,6 +90,11 @@ export default new Router({
       path: '/admin-home',
       name: 'admin-home',
       component: AdminHome
+    },
+    {
+      path: '/admin-delete/:uuid/:username',
+      name: 'admin-delete',
+      component: DeletePost
     }
   ]
 })

@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,11 +15,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import dto_request.SearchAdminUsersDTO;
 import dto_request.SearchUsersDTO;
 import dto_request.UpdateProfileDTO;
-import dto_response.SearchedUserDTO;
 import dto_response.UserBasicProfileRepsonseDTO;
-import dto_response.UserProfileDTO;
 import extractor.Extractor;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -120,6 +118,18 @@ public class UserController {
 		
 	}
 	
+	@GET
+	@Path("/delete/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response delete(@Context HttpServletRequest request,@PathParam("username") String username) {
+		
+//		String username = Extractor.getUsernameFromToken(request);
+		
+		return Response.status(200).entity(us.delete(username)).type(MediaType.APPLICATION_JSON).build();
+		
+	}
+	
 //	@POST
 //	@Path("/update/{username}")
 //	@Produces(MediaType.APPLICATION_JSON)
@@ -135,6 +145,16 @@ public class UserController {
 	public Response search(@Context HttpServletRequest request,SearchUsersDTO sudto) {
 		
 		return Response.status(200).entity(us.search(sudto)).type(MediaType.APPLICATION_JSON).build();
+		
+	}
+	
+	@POST
+	@Path("/admin-search")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response searchAdmin(@Context HttpServletRequest request,SearchAdminUsersDTO sudto) {
+		
+		return Response.status(200).entity(us.searchAdmin(sudto)).type(MediaType.APPLICATION_JSON).build();
 		
 	}
 	
